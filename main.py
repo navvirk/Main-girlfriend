@@ -18,7 +18,7 @@ headers = {
     "Authorization": f"Bearer {HF_TOKEN}"
 }
 
-API_URL = "https://api-inference.huggingface.co/models/mrm8488/long-form-question-answering"
+API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-1B-distill""
 
 @bot.message_handler(commands=['start'])
 def start(message):
