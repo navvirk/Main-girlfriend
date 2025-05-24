@@ -10,7 +10,7 @@ if BOT_TOKEN is None or HF_TOKEN is None:
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-3B"
 headers = {
     "Authorization": f"Bearer {HF_TOKEN}"
 }
