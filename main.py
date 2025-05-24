@@ -20,28 +20,28 @@ headers = {
 
 API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-1B-distill"
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.reply_to(message, "Hi jaanu, tainu kivein yaad aaya? Likhi ja kuch...")
-
 @bot.message_handler(func=lambda m: True)
 def reply(message):
     try:
-        payload = {
-            "inputs": message.text
-        }
+        payload = {"inputs": message.text}
         response = requests.post(API_URL, headers=headers, json=payload)
+
+        if response.status_code != 200:
+            raise Exception(f"Hugging Face API error: {response.status_code} - {response.text}")
+
+        if not response.text.strip():
+            raise Exception("Empty response from Hugging Face API.")
+
         data = response.json()
 
-        # DEBUG LOG
-        print(data)
+        print("HF Response:", data)
 
-        if isinstance(data, list) and 'answer' in data[0]:
-            answer = data[0]['answer']
-        elif 'generated_text' in data:
+        if 'generated_text' in data:
             answer = data['generated_text']
+        elif isinstance(data, list) and 'generated_text' in data[0]:
+            answer = data[0]['generated_text']
         elif 'error' in data:
-            answer = f"Error from HF API: {data['error']}"
+            answer = f"Hugging Face Error: {data['error']}"
         else:
             answer = "Sorry jaan, kujh samajh nahi aaya..."
 
@@ -49,6 +49,3 @@ def reply(message):
 
     except Exception as e:
         bot.reply_to(message, f"Oye hoye! Kujh error ho gaya sajna.\n{str(e)}")
-
-print("Bot is running...")
-bot.polling()
