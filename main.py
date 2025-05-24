@@ -18,7 +18,7 @@ headers = {
     "Authorization": f"Bearer {HF_TOKEN}"
 }
 
-API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-1B-distill""
+API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-1B-distill"
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -28,7 +28,7 @@ def start(message):
 def reply(message):
     try:
         payload = {
-    "inputs": message.text
+            "inputs": message.text
         }
         response = requests.post(API_URL, headers=headers, json=payload)
         data = response.json()
