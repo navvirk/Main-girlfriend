@@ -1,9 +1,10 @@
+import os
 import telebot
 import requests
 
-# Tokens
-BOT_TOKEN = "7553740502:AAGTAu5Pla0MsLJ_pJ6XEgpjLrMUOvsWQZ8"
-HF_TOKEN = "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"
+# Get tokens from environment
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -19,7 +20,7 @@ def get_ai_reply(message):
         generated = response.json()[0]["generated_text"]
         return generated
     except:
-        return "Sajna, thoda ruk ja, kuch error aa gaya!"
+        return "Oye hoye! Kujh error ho gaya sajna."
 
 @bot.message_handler(func=lambda msg: True)
 def handle_all(msg):
