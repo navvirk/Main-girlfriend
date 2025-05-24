@@ -15,7 +15,7 @@ headers = {
     "Authorization": f"Bearer {HF_TOKEN}"
 }
 
-API_URL = "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct"
+API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1"
 
 @bot.message_handler(commands=['start'])
 def start(message):
