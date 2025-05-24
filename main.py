@@ -31,6 +31,5 @@ def chat(message):
             bot.reply_to(message, f"HF Error {response.status_code}:\n{response.text}")
 
     except Exception as e:
-        bot.reply_to(message, f"Bot crashed:\n{str(e)}")
-
+    bot.reply_to(message, f"Oye hoye! Kujh error ho gaya sajna.\n{str(e)}")
 bot.polling()
