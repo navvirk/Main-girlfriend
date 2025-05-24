@@ -28,10 +28,7 @@ def start(message):
 def reply(message):
     try:
         payload = {
-            "inputs": {
-                "question": message.text,
-                "context": "You are chatting with your romantic Punjabi girlfriend Aman. She is flirty, loving, and full of attitude."
-            }
+    "inputs": message.text
         }
         response = requests.post(API_URL, headers=headers, json=payload)
         data = response.json()
