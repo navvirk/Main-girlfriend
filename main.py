@@ -4,7 +4,8 @@ import requests
 
 #Get env vars
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN") HF_TOKEN = os.environ.get("HF_TOKEN")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+HF_TOKEN = os.environ.get("HF_TOKEN")
 
 if BOT_TOKEN is None or HF_TOKEN is None: raise ValueError("BOT_TOKEN or HF_TOKEN is not set! Check Railway or Replit variables.")
 
