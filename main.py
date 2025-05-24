@@ -11,13 +11,11 @@ if BOT_TOKEN is None or HF_TOKEN is None:
 bot = telebot.TeleBot(BOT_TOKEN)
 
 API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
-headers = {
-    "Authorization": f"Bearer {HF_TOKEN}"
-}
+headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, "Hi jaanu, tainu kivein yaad aaya? Likhi ja kuch...")
+    bot.reply_to(message, "Hi jaanu, likh na kuch hor gallan karan layi.")
 
 @bot.message_handler(func=lambda m: True)
 def reply(message):
@@ -25,24 +23,24 @@ def reply(message):
         payload = {"inputs": message.text}
         response = requests.post(API_URL, headers=headers, json=payload)
 
-        print("HF raw response:", response.text)  # Log response
+        print("HF raw response:", response.text)
+
         data = response.json()
 
-        if isinstance(data, dict) and 'generated_text' in data:
-            reply_text = data['generated_text']
-        elif isinstance(data, list) and 'generated_text' in data[0]:
+        if isinstance(data, list) and 'generated_text' in data[0]:
             reply_text = data[0]['generated_text']
+        elif 'generated_text' in data:
+            reply_text = data['generated_text']
         elif 'error' in data:
-            reply_text = f"Hugging Face Error: {data['error']}"
+            reply_text = f"HF Error: {data['error']}"
         else:
-            reply_text = "Sorry jaan, kujh samajh nahi aaya..."
+            reply_text = "Jaanu, kujh galti ho gayi."
 
         bot.reply_to(message, reply_text)
 
     except Exception as e:
-        error_msg = f"Oye hoye! Kujh error ho gaya sajna.\n{str(e)}"
-        print(error_msg)
-        bot.reply_to(message, error_msg)
+        print("Error:", str(e))
+        bot.reply_to(message, f"Oye hoye! Kujh error ho gaya sajna.\n{str(e)}")
 
 print("Bot is running...")
 bot.polling()
