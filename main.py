@@ -2,8 +2,15 @@ import os
 import telebot
 import requests
 
+# Print environment vars for debugging
+print("BOT_TOKEN:", os.environ.get("BOT_TOKEN"))
+print("HF_TOKEN:", os.environ.get("HF_TOKEN"))
+
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 HF_TOKEN = os.environ.get("HF_TOKEN")
+
+if BOT_TOKEN is None or HF_TOKEN is None:
+    raise ValueError("BOT_TOKEN or HF_TOKEN is not set! Check Railway shared variables.")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
