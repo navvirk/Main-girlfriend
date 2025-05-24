@@ -1,4 +1,6 @@
-import os import telebot import requests
+import os
+import telebot
+import requests
 
 Get env vars
 
