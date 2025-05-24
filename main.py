@@ -2,23 +2,22 @@ import os
 import telebot
 import requests
 
-# Print environment vars for debugging
-print("BOT_TOKEN:", os.environ.get("BOT_TOKEN"))
-print("HF_TOKEN:", os.environ.get("HF_TOKEN"))
-
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
 if BOT_TOKEN is None or HF_TOKEN is None:
-    raise ValueError("BOT_TOKEN or HF_TOKEN is not set! Check Railway shared variables.")
+    raise ValueError("BOT_TOKEN or HF_TOKEN is not set!")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
+API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
 headers = {
     "Authorization": f"Bearer {HF_TOKEN}"
 }
 
-API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message, "Hi jaanu, tainu kivein yaad aaya? Likhi ja kuch...")
 
 @bot.message_handler(func=lambda m: True)
 def reply(message):
@@ -26,26 +25,24 @@ def reply(message):
         payload = {"inputs": message.text}
         response = requests.post(API_URL, headers=headers, json=payload)
 
-        if response.status_code != 200:
-            raise Exception(f"Hugging Face API error: {response.status_code} - {response.text}")
-
-        if not response.text.strip():
-            raise Exception("Empty response from Hugging Face API.")
-
+        print("HF raw response:", response.text)  # Log response
         data = response.json()
 
-        print("HF Response:", data)
-
-        if 'generated_text' in data:
-            answer = data['generated_text']
+        if isinstance(data, dict) and 'generated_text' in data:
+            reply_text = data['generated_text']
         elif isinstance(data, list) and 'generated_text' in data[0]:
-            answer = data[0]['generated_text']
+            reply_text = data[0]['generated_text']
         elif 'error' in data:
-            answer = f"Hugging Face Error: {data['error']}"
+            reply_text = f"Hugging Face Error: {data['error']}"
         else:
-            answer = "Sorry jaan, kujh samajh nahi aaya..."
+            reply_text = "Sorry jaan, kujh samajh nahi aaya..."
 
-        bot.reply_to(message, answer)
+        bot.reply_to(message, reply_text)
 
     except Exception as e:
-        bot.reply_to(message, f"Oye hoye! Kujh error ho gaya sajna.\n{str(e)}")
+        error_msg = f"Oye hoye! Kujh error ho gaya sajna.\n{str(e)}"
+        print(error_msg)
+        bot.reply_to(message, error_msg)
+
+print("Bot is running...")
+bot.polling()
