@@ -17,10 +17,9 @@ def get_ai_reply(message):
         json=json_data
     )
     try:
-        generated = response.json()[0]["generated_text"]
-        return generated
-    except:
-        return "Oye hoye! Kujh error ho gaya sajna."
+    # AI reply logic
+except Exception as e:
+    bot.reply_to(message, f"Oye hoye! Kujh error ho gaya sajna: {str(e)}")
 
 @bot.message_handler(func=lambda msg: True)
 def handle_all(msg):
