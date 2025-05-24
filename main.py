@@ -2,12 +2,12 @@ import os
 import telebot
 import requests
 
-# Get env vars
+# Get environment variables
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
 if BOT_TOKEN is None or HF_TOKEN is None:
-    raise ValueError("BOT_TOKEN or HF_TOKEN is not set! Check Railway or Replit variables.")
+    raise ValueError("BOT_TOKEN or HF_TOKEN is not set!")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -15,7 +15,7 @@ headers = {
     "Authorization": f"Bearer {HF_TOKEN}"
 }
 
-API_URL = "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct"
+API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -24,15 +24,8 @@ def start(message):
 @bot.message_handler(func=lambda m: True)
 def reply(message):
     try:
-        prompt = f"User: {message.text}\nGF (flirty Punjabi style):"
-
         payload = {
-            "inputs": prompt,
-            "parameters": {
-                "max_new_tokens": 100,
-                "temperature": 0.8,
-                "return_full_text": False
-            }
+            "inputs": message.text
         }
 
         response = requests.post(API_URL, headers=headers, json=payload)
@@ -44,8 +37,10 @@ def reply(message):
         data = response.json()
         print("HF raw response:", data)
 
-        if isinstance(data, list) and len(data) > 0 and 'generated_text' in data[0]:
-            answer = data[0]['generated_text'].strip()
+        if 'generated_text' in data:
+            answer = data['generated_text']
+        elif isinstance(data, list) and len(data) > 0 and 'generated_text' in data[0]:
+            answer = data[0]['generated_text']
         else:
             answer = "Sorry jaan, kujh galat ho gaya..."
 
