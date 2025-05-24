@@ -18,7 +18,7 @@ headers = {
     "Authorization": f"Bearer {HF_TOKEN}"
 }
 
-API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-1B-distill"
+API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small""
 
 @bot.message_handler(func=lambda m: True)
 def reply(message):
