@@ -21,15 +21,8 @@ def chat(message):
 
         response = requests.post(API_URL, headers=headers, json=payload)
 
-        if response.status_code != 200:
-            bot.reply_to(message, f"Oye hoye! AI error: {response.status_code} - {response.text}")
-            return
-
-        result = response.json()
-        reply = result[0]["generated_text"]
-        bot.reply_to(message, reply)
+        # Always print full response
+        bot.reply_to(message, f"STATUS: {response.status_code}\nTEXT: {response.text}")
 
     except Exception as e:
-        bot.reply_to(message, f"Oye hoye! Python error: {str(e)}")
-
-bot.polling()
+        bot.reply_to(message, f"ERROR: {str(e)}")
